@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熱平衡互動模擬實驗</title>
+    <style>
+        :root {
+            --hot-color: #ff4d4d;
+            --cold-color: #4d79ff;
+            --mix-color: #a64dff;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('page.jpg'); /* 這裡換成你的背景圖檔名 */
+			background-size: cover;          /* 讓圖片充滿整個畫面 */
+			background-position: center;     /* 圖片置中 */
+			background-repeat: no-repeat;    /* 不要重複排列 */
+			background-attachment: fixed;    /* 捲動時背景固定不動 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+		
+		/* Logo 的樣式設定 */
+		.my-logo {
+		    position: absolute;  /* 絕對位置，可以自由固定在角落 */
+		    top: 15px;           /* 距離頂部 15px */
+		    left: 15px;          /* 距離左邊 15px (想放右邊就改成 right: 15px) */
+		    width: 120px;        /* Logo 寬度，可自行調整大小 */
+		    z-index: 1000;       /* 確保 Logo 浮在最上層 */
+		    opacity: 0.9;        /*稍微一點點透明，看起來比較融合 */
+		    }
+		
+		/* 如果是手機版，Logo 縮小一點以免擋住內容 */
+		@media (max-width: 600px) {
+		.my-logo {
+		    width: 80px;
+            top: 10px;
+            left: 10px;
+		    }
+		}
+
+        h1 { margin-bottom: 10px; color: #2c3e50; }
+        p.subtitle { color: #7f8c8d; margin-bottom: 30px; }
+
+        /* 控制面板 */
+        .controls {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .hot-group label { color: var(--hot-color); }
+        .cold-group label { color: var(--cold-color); }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.1s;
+            align-self: flex-end;
+            margin-bottom: 3px;
+        }
+
+        button:active { transform: scale(0.95); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* 視覺展示區 */
+        .simulation-area {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 40px;
+            margin-bottom: 40px;
+            height: 250px;
+        }
+
+        .beaker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+            position: relative;
+        }
+
+        .beaker {
+            width: 80px;
+            height: 150px;
+            border: 3px solid #555;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            background-color: rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transition: height 0.5s ease, background-color 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .thermometer-display {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* 混合後的燒杯 */
+        #mix-beaker-container {
+            width: 120px;
+        }
+        #mix-beaker {
+            width: 100px;
+            height: 180px;
+        }
+
+        /* 過程箭頭 */
+        .arrow {
+            font-size: 2rem;
+            color: #bdc3c7;
+            align-self: center;
+            margin-bottom: 60px;
+        }
+
+        /* 數學推導區 */
+        .math-board {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .math-step {
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+        
+        .math-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight { color: #f1c40f; font-weight: bold; }
+        .hot-text { color: #ff6b6b; }
+        .cold-text { color: #74b9ff; }
+
+    </style>
+</head>
+<body>
+
+    <img src="logo.jpg" alt="學校Logo" class="my-logo">
+	<h1>晟自然輔助系統　熱平衡互動模擬</h1>
+    <p class="subtitle">假設無熱量散失，混合兩種溫度的水</p>
+
+    <div class="controls">
+        <div class="input-group hot-group">
+            <label>熱水質量 (g)</label>
+            <input type="number" id="mHot" value="20">
+        </div>
+        <div class="input-group hot-group">
+            <label>熱水溫度 (°C)</label>
+            <input type="number" id="tHot" value="80">
+        </div>
+        
+        <div class="input-group cold-group">
+            <label>冷水質量 (g)</label>
+            <input type="number" id="mCold" value="60">
+        </div>
+        <div class="input-group cold-group">
+            <label>冷水溫度 (°C)</label>
+            <input type="number" id="tCold" value="20">
+        </div>
+
+        <button id="startBtn" onclick="startSimulation()">開始混合</button>
+    </div>
+
+    <div class="simulation-area">
+        <div class="beaker-container" id="hot-container">
+            <div class="beaker">
+                <div class="liquid" id="liquid-hot" style="height: 0%; background-color: var(--hot-color);"></div>
+            </div>
+            <div class="thermometer-display" id="text-hot">80°C</div>
+            <div style="font-size:0.8rem; color:#666;">熱水</div>
+        </div>
+
+        <div class="arrow">➔</div>
+
+        <div class="beaker-container" id="mix-beaker-container">
+            <div class="beaker" id="mix-beaker">
+                <div class="liquid" id="liquid-mix" style="height: 0%; background-color: #ddd;"></div>
+            </div>
+            <div class="thermometer-display" id="text-mix">?°C</div>
+            <div style="font-size:0.8rem; color:#666;">混合後</div>
+        </div>
+
+        <div class="arrow">⬅</div>
+
+        <div class="beaker-container" id="cold-container">
+            <div class="beaker">
+                <div class="liquid" id="liquid-cold" style="height: 0%; background-color: var(--cold-color);"></div>
+            </div>
+            <div class="thermometer-display" id="text-cold">20°C</div>
+            <div style="font-size:0.8rem; color:#666;">冷水</div>
+        </div>
+    </div>
+
+    <div class="math-board" id="math-board">
+        <div style="text-align: center; color: #bdc3c7; border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 10px;">計算過程</div>
+        <div id="math-steps"></div>
+    </div>
+
+    <script>
+        // 初始化顯示
+        window.onload = function() {
+            updateVisuals(20, 80, 60, 20);
+        };
+
+        function updateVisuals(m1, t1, m2, t2) {
+            // 設定液體高度 (簡單比例，假設燒杯最大容量 150g)
+            const maxCap = 150;
+            
+            document.getElementById('liquid-hot').style.height = (m1 / maxCap * 100) + '%';
+            document.getElementById('text-hot').innerText = t1 + '°C';
+            
+            document.getElementById('liquid-cold').style.height = (m2 / maxCap * 100) + '%';
+            document.getElementById('text-cold').innerText = t2 + '°C';
+
+            // 重置混合杯
+            document.getElementById('liquid-mix').style.height = '0%';
+            document.getElementById('liquid-mix').innerText = '';
+            document.getElementById('text-mix').innerText = '?°C';
+            document.getElementById('math-steps').innerHTML = '';
+            
+            // 恢復原本燒杯的透明度
+            document.getElementById('hot-container').style.opacity = '1';
+            document.getElementById('cold-container').style.opacity = '1';
+        }
+
+        async function startSimulation() {
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+
+            // 獲取數值
+            const m1 = parseFloat(document.getElementById('mHot').value);
+            const t1 = parseFloat(document.getElementById('tHot').value);
+            const m2 = parseFloat(document.getElementById('mCold').value);
+            const t2 = parseFloat(document.getElementById('tCold').value);
+
+            if (m1 <= 0 || m2 <= 0) {
+                alert("質量必須大於 0");
+                btn.disabled = false;
+                return;
+            }
+
+            // 更新初始狀態
+            updateVisuals(m1, t1, m2, t2);
+            
+            // 1. 計算最終溫度
+            // 公式: H放 = H吸
+            // m1 * 1 * (t1 - T) = m2 * 1 * (T - t2)
+            // m1*t1 - m1*T = m2*T - m2*t2
+            // m1*t1 + m2*t2 = T(m1 + m2)
+            // T = (m1*t1 + m2*t2) / (m1 + m2)
+            
+            const totalMass = m1 + m2;
+            const finalTemp = (m1 * t1 + m2 * t2) / totalMass;
+            const finalTempFixed = finalTemp.toFixed(1); // 取小數點後一位
+
+            // 計算顏色 (簡單的線性插值)
+            // 0度為藍(240 hue), 100度為紅(0 hue)
+            // 實際上冷水(20)偏藍，熱水(80)偏紅
+            const getHue = (temp) => {
+                // 限制範圍 0-100
+                const t = Math.max(0, Math.min(100, temp));
+                // 100度 -> 0 (Red), 0度 -> 240 (Blue)
+                return 240 - (t / 100 * 240);
+            };
+
+            const finalColor = `hsl(${getHue(finalTemp)}, 100%, 60%)`;
+
+            // 2. 動畫：將兩杯水倒入中間
+            await wait(500);
+            
+            // 步驟顯示
+            addMathStep(`1. 核心概念：<span class="hot-text">熱水放出的熱量</span> = <span class="cold-text">冷水吸收的熱量</span>`);
+            await wait(800);
+            addMathStep(`2. 公式：m₁ × (T₁ - T) = m₂ × (T - T₂)`);
+            await wait(800);
+
+            // 模擬倒入：左右兩杯消失，中間杯子長高
+            document.getElementById('hot-container').style.transition = "opacity 1s";
+            document.getElementById('cold-container').style.transition = "opacity 1s";
+            document.getElementById('hot-container').style.opacity = "0.2";
+            document.getElementById('cold-container').style.opacity = "0.2";
+
+            const liquidMix = document.getElementById('liquid-mix');
+            liquidMix.style.transition = "height 1.5s ease-in-out, background-color 1.5s";
+            liquidMix.style.height = (totalMass / 150 * 100) + '%'; // 150是最大容量假設
+            liquidMix.style.backgroundColor = finalColor;
+            
+            // 數字動畫
+            animateValue("text-mix", (t1+t2)/2, finalTemp, 1500);
+
+            await wait(1600);
+            
+            // 顯示代入數值
+            addMathStep(`3. 代入數值：`);
+            addMathStep(`${m1} × (${t1} - T) = ${m2} × (T - ${t2})`);
+            await wait(1000);
+            
+            addMathStep(`4. 展開計算：`);
+            const leftSide = m1 * t1;
+            const rightSide = m2 * t2;
+            addMathStep(`${leftSide} - ${m1}T = ${m2}T - ${rightSide}`);
+            await wait(1000);
+
+            addMathStep(`${leftSide + rightSide} = ${m1 + m2}T`);
+            await wait(1000);
+
+            addMathStep(`5. 求解平衡溫度：`);
+            addMathStep(`T = <span class="highlight">${finalTempFixed} °C</span>`);
+
+            liquidMix.innerText = finalTempFixed + "°C";
+            btn.disabled = false;
+        }
+
+        function addMathStep(html) {
+            const container = document.getElementById('math-steps');
+            const div = document.createElement('div');
+            div.className = 'math-step';
+            div.innerHTML = html;
+            container.appendChild(div);
+            // 觸發重繪以啟動 CSS transition
+            setTimeout(() => div.classList.add('visible'), 50);
+            // 滾動到底部
+            const board = document.getElementById('math-board');
+            board.scrollTop = board.scrollHeight;
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(1) + "°C";
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
