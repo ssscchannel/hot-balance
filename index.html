@@ -51,9 +51,10 @@
 
         /* 調整 H1 標題，把原本的邊距拿掉，讓對齊更準 */
         h1 { 
-			margin-bottom: 10px;
+			margin-bottom: 5px;
 			color: #2c3e50; 
-			text-shadow: 1px 1px 2px white;
+			text-shadow: none;
+			font-weight: bold;
 			line-height: 1;            /* 讓行高緊湊一點 */
 		}
 
@@ -62,6 +63,15 @@
             .title-logo { height: 40px; }
             h1 { font-size: 1.5rem; }
         }
+
+		.subtitle {
+			font-size: 0.9em;
+			color: #7f8c8d;           /* 奧斯特實驗用的質感灰 */
+			margin-bottom: 30px;      /* 與下方內容保持距離 */
+			font-weight: normal;      /* 移除粗體 */
+			text-shadow: none;        /* 移除陰影 */
+			margin-top: 0;            /* 確保上方沒有多餘空白 */
+		}
         
         /* 控制面板 */
         .controls {
@@ -433,6 +443,7 @@
     </script>
 </body>
 </html>
+
 
 
 
