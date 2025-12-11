@@ -73,16 +73,8 @@
         
         /* 控制面板 */
         .controls {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-            max-width: 800px;
+            padding: 15px;
+            gap: 15px;
         }
 
         .input-group {
@@ -98,11 +90,8 @@
         }
 
         .input-group input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            width: 80px;
-            text-align: center;
+            width: 100px;
+            font-size: 16px; /* 防止 iPhone 自動放大 */
         }
 
         .hot-group label { color: var(--hot-color); }
@@ -126,24 +115,24 @@
 
         /* 視覺展示區 */
         .simulation-area {
-            display: flex;
-            justify-content: center;
             align-items: flex-end;
-            gap: 40px;
-            margin-bottom: 40px;
-            height: 250px;
+            gap: 10px;
+            height: auto;
+			min-height: 220px;
+			transform: scale(0.9); /* 整體稍微縮小 */
+			transform-origin: bottom center;
         }
 
         .beaker-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100px;
+            width: 70px;
             position: relative;
         }
 
         .beaker {
-            width: 80px;
+            width: 60px;
             height: 150px;
             border: 3px solid #555;
             border-top: none;
@@ -179,16 +168,18 @@
             width: 120px;
         }
         #mix-beaker {
-            width: 100px;
+            width: 80px;
             height: 180px;
         }
 
         /* 過程箭頭 */
         .arrow {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #bdc3c7;
             align-self: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
+			margin-left: 5px;
+			margin-right: 5px;
         }
 
         /* 數學推導區 */
@@ -226,7 +217,7 @@
 
     <div class="header-container">
 	    <img src="logo.jpg" alt="晟自然輔助系統" class="title-logo">
-	    <h1>晟自然輔助系統　熱平衡互動模擬</h1>
+	    <h1>晟自然輔助系統　熱平衡之兩杯混合</h1>
 	</div>
 	
     <p class="subtitle">假設無熱量散失，混合兩種溫度的水</p>
@@ -441,6 +432,7 @@
     </script>
 </body>
 </html>
+
 
 
 
