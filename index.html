@@ -55,11 +55,20 @@
 			font-size: 2rem;
 		}
 
+		/* 電腦版預設：把這個換行藏起來 */
+		.mobile-break {
+			display: none;
+		}
+
 		/* 手機版微調：如果螢幕真的很小，LOGO稍微縮小 */
         @media (max-width: 600px) {
             .title-logo { height: 40px; }
             h1 { font-size: 1.5rem; }
 			.header-container { gap: 10px; }
+			/* 手機版：讓換行標籤「現身」 */
+			.mobile-break {
+				display: inline;
+			}
         }
 
 		.subtitle {
@@ -220,7 +229,7 @@
 
     <div class="header-container">
 	    <img src="logo.jpg" alt="晟自然輔助系統" class="title-logo">
-	    <h1>晟自然輔助系統　熱平衡之兩杯混合</h1>
+	    <h1>晟自然輔助系統<br class="mobile-break">熱平衡之兩杯混合</h1>
 	</div>
 	
     <p class="subtitle">假設無熱量散失，混合兩種溫度的水</p>
@@ -435,6 +444,7 @@
     </script>
 </body>
 </html>
+
 
 
 
