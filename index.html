@@ -23,11 +23,10 @@
 			background-position: center;     /* 圖片置中 */
 			background-repeat: no-repeat;    /* 不要重複排列 */
 			background-attachment: fixed;    /* 捲動時背景固定不動 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            color: #333;
+            background-color: rgba(255, 255, 255, 0.8);
+			display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 20px; color: #333;
+			min-height: 100vh;
         }
 		
 		/* 標題列容器：讓圖片跟文字橫向排列 */
@@ -37,8 +36,6 @@
             justify-content: center;   /* 水平置中對齊 */
             gap: 15px;                 /* 圖片跟文字中間的距離 */
             margin-top: 20px;          /* 距離頂部的距離 */
-            margin-bottom: 20px;       /* 距離下面內容的距離 */
-            flex-wrap: wrap;           /* 如果螢幕太小，允許換行 */
         }
 
         /* LOGO 的設定 */
@@ -51,17 +48,18 @@
 
         /* 調整 H1 標題，把原本的邊距拿掉，讓對齊更準 */
         h1 { 
-			margin-bottom: 5px;
+			margin: 0;
 			color: #2c3e50; 
-			text-shadow: none;
-			font-weight: bold;
+			text-shadow: 1px 1px 2px white;
 			line-height: 1;            /* 讓行高緊湊一點 */
+			font-size: 2rem;
 		}
 
 		/* 手機版微調：如果螢幕真的很小，LOGO稍微縮小 */
         @media (max-width: 600px) {
             .title-logo { height: 40px; }
             h1 { font-size: 1.5rem; }
+			.header-container { gap: 10px; }
         }
 
 		.subtitle {
@@ -443,6 +441,7 @@
     </script>
 </body>
 </html>
+
 
 
 
