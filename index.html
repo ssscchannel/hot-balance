@@ -30,28 +30,39 @@
             color: #333;
         }
 		
-		/* Logo 的樣式設定 */
-		.my-logo {
-		    position: absolute;  /* 絕對位置，可以自由固定在角落 */
-		    top: 15px;           /* 距離頂部 15px */
-		    left: 15px;          /* 距離左邊 15px (想放右邊就改成 right: 15px) */
-		    width: 120px;        /* Logo 寬度，可自行調整大小 */
-		    z-index: 1000;       /* 確保 Logo 浮在最上層 */
-		    opacity: 0.9;        /*稍微一點點透明，看起來比較融合 */
-		    }
-		
-		/* 如果是手機版，Logo 縮小一點以免擋住內容 */
-		@media (max-width: 600px) {
-		.my-logo {
-		    width: 80px;
-            top: 10px;
-            left: 10px;
-		    }
+		/* 標題列容器：讓圖片跟文字橫向排列 */
+        .header-container {
+            display: flex;             /* 彈性排版模式 */
+            align-items: center;       /* 垂直置中對齊 */
+            justify-content: center;   /* 水平置中對齊 */
+            gap: 15px;                 /* 圖片跟文字中間的距離 */
+            margin-top: 20px;          /* 距離頂部的距離 */
+            margin-bottom: 20px;       /* 距離下面內容的距離 */
+            flex-wrap: wrap;           /* 如果螢幕太小，允許換行 */
+        }
+
+        /* LOGO 的設定 */
+        .title-logo {
+            height: 60px;              /* 設定高度，讓它不要太大 */
+            width: auto;               /* 寬度自動調整，保持比例 */
+            /* 如果你的 LOGO 有白底，可以加這行讓它變圓角 (選用) */
+            /* border-radius: 10px; */ 
+        }
+
+        /* 調整 H1 標題，把原本的邊距拿掉，讓對齊更準 */
+        h1 { 
+			margin-bottom: 10px;
+			color: #2c3e50; 
+			text-shadow: 1px 1px 2px white;
+			line-height: 1;            /* 讓行高緊湊一點 */
 		}
 
-        h1 { margin-bottom: 10px; color: #2c3e50; }
-        p.subtitle { color: #7f8c8d; margin-bottom: 30px; }
-
+		/* 手機版微調：如果螢幕真的很小，LOGO稍微縮小 */
+        @media (max-width: 600px) {
+            .title-logo { height: 40px; }
+            h1 { font-size: 1.5rem; }
+        }
+        
         /* 控制面板 */
         .controls {
             background: var(--card-bg);
@@ -205,8 +216,11 @@
 </head>
 <body>
 
-    <img src="logo.jpg" alt="學校Logo" class="my-logo">
-	<h1>晟自然輔助系統　熱平衡互動模擬</h1>
+    <div class="header-container">
+	    <img src="logo.jpg" alt="晟自然輔助系統" class="title-logo">
+	    <h1>晟自然輔助系統　熱平衡互動模擬</h1>
+	</div>
+	
     <p class="subtitle">假設無熱量散失，混合兩種溫度的水</p>
 
     <div class="controls">
@@ -419,4 +433,5 @@
     </script>
 </body>
 </html>
+
 
