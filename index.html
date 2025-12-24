@@ -11,25 +11,38 @@
             --mix-color: #a64dff;
             --bg-color: #f0f4f8;
             --card-bg: #ffffff;
+            --arrow-color: #bdc3c7;
         }
 
+        /* 3. 背景鎖定技術：將背景設定在偽元素並固定，解決手機版背景跳動問題 */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('page.jpg'); 
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
-			background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 10px;
             color: #333;
             margin: 0;
-            overflow-x: hidden; /* 防止手機版橫向捲動 */
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative; /* 建立定位基準 */
         }
 
-        /* --- 標題區塊 --- */
+        body::before {
+            content: "";
+            position: fixed; /* 強制固定背景，不隨內容滾動 */
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-image: url('page.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1; /* 置於內容最底層 */
+        }
+
+        /* 標題區塊 */
         .header-container { 
             display: flex; align-items: center; justify-content: center;   
             gap: 10px; margin-top: 15px; margin-bottom: 10px;
@@ -43,50 +56,50 @@
         h1 { margin: 0; color: #2c3e50; font-size: 1.2rem; text-align: center; white-space: nowrap; }
         p.subtitle { color: #7f8c8d; margin-bottom: 15px; font-size: 0.9rem; text-align: center;}
 
-        /* --- 外部連結按鈕 (美化版) --- */
+        /* 1. 外部連結按鈕 (縮小版) */
         .external-link-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px; /* 間距縮小 */
             text-decoration: none;
-            /* 顯眼的漸層色 */
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: #fff;
-            padding: 10px 25px;
+            
+            /* 修改處：縮小內距與字體 */
+            padding: 6px 18px; 
+            font-size: 0.9rem; 
+            
             border-radius: 50px;
-            font-size: 1rem;
             font-weight: bold;
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.4);
             transition: all 0.2s ease;
             cursor: pointer;
             border: 2px solid rgba(255,255,255,0.2);
         }
         .external-link-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.6);
+            box-shadow: 0 5px 12px rgba(52, 152, 219, 0.6);
             background: linear-gradient(135deg, #2980b9 0%, #2c3e50 100%);
         }
         .external-link-btn:active {
             transform: scale(0.98);
         }
 
-        /* 控制面板 - 手機優先佈局優化 */
+        /* 控制面板 */
         .controls {
             background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            max-width: 600px; /* 限制最大寬度 */
+            max-width: 600px;
             width: 90%;
-            
-            /* 使用 Grid 佈局確保整齊 */
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 兩欄 */
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            align-items: end; /* 底部對齊 */
+            align-items: end;
         }
 
         .input-group {
@@ -100,17 +113,17 @@
             font-size: 0.9rem;
             margin-bottom: 5px;
             font-weight: bold;
-            white-space: nowrap; /* 禁止文字斷行 */
+            white-space: nowrap;
         }
 
         .input-group input {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            width: 100%; /* 填滿欄位 */
+            width: 100%;
             max-width: 100px;
             text-align: center;
-            font-size: 1.1rem; /* 手機版字大一點好點選 */
+            font-size: 1.1rem;
             box-sizing: border-box;
         }
 
@@ -118,7 +131,7 @@
         .cold-group label { color: var(--cold-color); }
 
         button#startBtn {
-            grid-column: 1 / -1; /* 按鈕橫跨兩欄 */
+            grid-column: 1 / -1;
             background-color: #2ecc71;
             color: white;
             border: none;
@@ -130,7 +143,7 @@
             transition: transform 0.1s;
             width: 100%;
             margin-top: 10px;
-            box-shadow: 0 4px 0 #27ae60; /* 按鈕立體感 */
+            box-shadow: 0 4px 0 #27ae60;
         }
 
         button#startBtn:active { 
@@ -149,7 +162,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            gap: 20px;
+            gap: 15px; /* 微調間距 */
             margin-bottom: 40px;
             height: 250px;
             width: 100%;
@@ -162,11 +175,11 @@
             align-items: center;
             width: 90px;
             position: relative;
-            flex-shrink: 0; /* 防止被擠壓 */
+            flex-shrink: 0;
         }
 
         .beaker {
-            width: 100%; /* 隨容器調整 */
+            width: 100%;
             max-width: 80px;
             height: 150px;
             border: 3px solid #555;
@@ -199,21 +212,41 @@
             white-space: nowrap;
         }
 
-        /* 混合後的燒杯 - 加大 */
         #mix-beaker-container {
             width: 110px; 
         }
         #mix-beaker {
             max-width: 100px;
-            height: 180px; /* 較高以容納更多液體 */
+            height: 180px;
         }
 
-        /* 過程箭頭 */
-        .arrow {
-            font-size: 1.5rem;
-            color: #bdc3c7;
-            align-self: center;
-            margin-bottom: 60px;
+        /* 2. 箭頭美化與統一化 (CSS 形狀) */
+        .arrow-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px; /* 對齊燒杯高度 */
+            width: 30px;
+            margin-bottom: 25px; /* 對齊燒杯底部 */
+        }
+
+        .arrow-shape {
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            display: inline-block;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+
+        /* 向右箭頭 (指向中間) */
+        .arrow-right {
+            border-left: 20px solid var(--arrow-color);
+        }
+
+        /* 向左箭頭 (指向中間) */
+        .arrow-left {
+            border-right: 20px solid var(--arrow-color);
         }
 
         /* 數學推導區 */
@@ -236,7 +269,7 @@
             opacity: 0;
             transform: translateY(10px);
             transition: all 0.5s ease;
-            word-wrap: break-word; /* 防止長算式撐開手機畫面 */
+            word-wrap: break-word;
         }
         
         .math-step.visible {
@@ -248,14 +281,22 @@
         .hot-text { color: #ff6b6b; }
         .cold-text { color: #74b9ff; }
 
-        /* 手機版適配微調 */
         @media (max-width: 600px) {
             h1 { font-size: 1.1rem; }
             .title-logo { height: 28px; }
-            .simulation-area { transform: scale(0.95); gap: 5px; }
+            .simulation-area { transform: scale(0.95); gap: 2px; }
             .beaker-container { width: 75px; }
             #mix-beaker-container { width: 90px; }
             .controls { gap: 10px; padding: 15px;}
+            
+            /* 手機版箭頭縮小一點 */
+            .arrow-shape {
+                border-top-width: 8px;
+                border-bottom-width: 8px;
+            }
+            .arrow-right { border-left-width: 14px; }
+            .arrow-left { border-right-width: 14px; }
+            .arrow-wrapper { width: 20px; }
         }
 
     </style>
@@ -268,7 +309,7 @@
     </div>
     
     <a href="https://line.me/ti/g2/TTCqPpZP6lQqX1z_AUDPNm4977Dvylew3O7oBg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" class="external-link-btn">
-        <span>👉</span>  加 LINE 免費提問
+        <span>👉</span> 加 LINE 免費提問
     </a>
 
     <p class="subtitle">假設無熱量散失，混合兩種溫度的水</p>
@@ -304,7 +345,9 @@
             <div style="font-size:0.8rem; color:#666;">熱水</div>
         </div>
 
-        <div class="arrow">➔</div>
+        <div class="arrow-wrapper">
+            <div class="arrow-shape arrow-right"></div>
+        </div>
 
         <div class="beaker-container" id="mix-beaker-container">
             <div class="beaker" id="mix-beaker">
@@ -314,7 +357,9 @@
             <div style="font-size:0.8rem; color:#666;">混合後</div>
         </div>
 
-        <div class="arrow">⬅</div>
+        <div class="arrow-wrapper">
+            <div class="arrow-shape arrow-left"></div>
+        </div>
 
         <div class="beaker-container" id="cold-container">
             <div class="beaker">
@@ -331,23 +376,15 @@
     </div>
 
     <script>
-        // 全局定義最大容量參考值 (g) - 用於繪圖比例
-        // 設為 200 是因為兩杯最大各 100g，相加最多 200g
         const MAX_CAPACITY_VISUAL = 200;
 
-        // 初始化顯示
         window.onload = function() {
-            // 初始值需要手動與 input 的 value 一致
             updateVisuals(20, 80, 60, 20);
         };
 
-        // 即時驗證輸入，不跳出 alert
         function validateInput(el, min, max) {
             let val = parseFloat(el.value);
-            // 如果是空值則不處理，讓使用者繼續打
             if (isNaN(val)) return;
-
-            // 超過範圍自動修正
             if (val > max) el.value = max;
             if (val < min) el.value = min;
         }
@@ -359,13 +396,11 @@
             document.getElementById('liquid-cold').style.height = (m2 / MAX_CAPACITY_VISUAL * 100) + '%';
             document.getElementById('text-cold').innerText = t2 + '°C';
 
-            // 重置混合杯
             document.getElementById('liquid-mix').style.height = '0%';
             document.getElementById('liquid-mix').innerText = '';
             document.getElementById('text-mix').innerText = '?°C';
             document.getElementById('math-steps').innerHTML = '';
             
-            // 恢復原本燒杯的透明度
             document.getElementById('hot-container').style.opacity = '1';
             document.getElementById('cold-container').style.opacity = '1';
         }
@@ -374,13 +409,11 @@
             const btn = document.getElementById('startBtn');
             btn.disabled = true;
 
-            // 再次強制獲取並校正數值 (防止使用者輸入後未觸發oninput就點按鈕)
             let elM1 = document.getElementById('mHot');
             let elT1 = document.getElementById('tHot');
             let elM2 = document.getElementById('mCold');
             let elT2 = document.getElementById('tCold');
 
-            // 強制檢查邊界
             validateInput(elM1, 1, 100);
             validateInput(elT1, 0, 100);
             validateInput(elM2, 1, 100);
@@ -391,15 +424,12 @@
             const m2 = parseFloat(elM2.value);
             const t2 = parseFloat(elT2.value);
 
-            // 更新初始狀態
             updateVisuals(m1, t1, m2, t2);
             
-            // 1. 計算最終溫度
             const totalMass = m1 + m2;
             const finalTemp = (m1 * t1 + m2 * t2) / totalMass;
             const finalTempFixed = finalTemp.toFixed(1); 
 
-            // 計算顏色
             const getHue = (temp) => {
                 const t = Math.max(0, Math.min(100, temp));
                 return 240 - (t / 100 * 240);
@@ -407,7 +437,6 @@
 
             const finalColor = `hsl(${getHue(finalTemp)}, 100%, 60%)`;
 
-            // 2. 動畫
             await wait(500);
             
             addMathStep(`1. 核心概念：<span class="hot-text">熱水放出的熱量</span> = <span class="cold-text">冷水吸收的熱量</span>`);
@@ -415,7 +444,6 @@
             addMathStep(`2. 公式：m₁ × (T₁ - T) = m₂ × (T - T₂)`);
             await wait(800);
 
-            // 模擬倒入
             document.getElementById('hot-container').style.transition = "opacity 1s";
             document.getElementById('cold-container').style.transition = "opacity 1s";
             document.getElementById('hot-container').style.opacity = "0.2";
@@ -424,11 +452,9 @@
             const liquidMix = document.getElementById('liquid-mix');
             liquidMix.style.transition = "height 1.5s ease-in-out, background-color 1.5s";
             
-            // 使用 MAX_CAPACITY_VISUAL (200) 計算高度，確保不溢出
             liquidMix.style.height = (totalMass / MAX_CAPACITY_VISUAL * 100) + '%'; 
             liquidMix.style.backgroundColor = finalColor;
             
-            // 數字動畫
             animateValue("text-mix", (t1+t2)/2, finalTemp, 1500);
 
             await wait(1600);
@@ -440,7 +466,6 @@
             addMathStep(`4. 展開計算：`);
             const leftSide = m1 * t1;
             const rightSide = m2 * t2;
-            // 顯示計算細節
             addMathStep(`${leftSide} - ${m1}T = ${m2}T - ${rightSide}`);
             await wait(1000);
 
